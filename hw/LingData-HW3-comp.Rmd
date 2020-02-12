@@ -24,8 +24,16 @@ hist(x, col="tomato", main="")
 ```
 
 a. What is the proportion of values in the sample that exceed $5$? Explain your answer.
+
+Answer: it's 1/4, because there seems to be 20 values in total in the sample and 5 of them are plotted on the right of x = 5. 5/20 = 1/4.
+
 b. Indicate the interval where the median of this sample can lie. Explain your answer.
+
+Answer: It may lie in the interval (-5:0), because here the median is calculated as a mean of the tenth and the eleventh values of the ordered sample and they lie in this interval.
+
 c. How the histogram will change if we add an element $7$ to the sample? Explain your answer.
+
+Answer: the frequency of values lying in the (5:10) interval will get higher, so does the corresponding bar.
 
 ### Problem 2
 
@@ -44,6 +52,8 @@ hist(sample2, col="lightgreen", xlim=c(100, 900))
 
 Which of the samples has a larger variance? Explain your answer.
 
+Answer: The first sample has larger variance, because here there are values differ more (from what seems to be a mean of the distribution).
+
 \newpage
 
 b. Look at the histograms of two samples.
@@ -58,6 +68,8 @@ hist(sample2, col="lightgreen", xlim=c(5, 15))
 ```
 
 Which of the samples has a larger variance? Explain your answer.
+
+Answer: The first sample may have a larger variance, as here values occupy broader interval, than those of the second sample.
 
 ## Part 2
 
@@ -76,35 +88,37 @@ hist(mistakes, breaks=60, col= "deepskyblue", ylim=c(0, 40))
 ### 3.1
 Is it true that $50$% students made more than $35$ mistakes?
 ```
-
+NO
 ```
 Explain your answer below:
-
+The distribution shows that there are more students who made less mistakes than that (than 35).
 
 ### 3.2
 Is it true that most students made no more than $10$ mistakes?
 ```
-
+NO
 ```
 Explain your answer below:
+There seems to be much more values on the right of the 10 value (which is somewhere in the middle between 0 and 20 on the mistakes axis).
 
 
 ### 3.3
 Which of the following values is closer to be the median of `mistakes`: $10$, $20$, $30$, $40$?
 ```
-
+20
 ```
 Explain your answer below:
-
+There are seemingly equal number of values distributed on the left and on the right of 20.
 
 ### Problem 4. Exact binomial test
 
 The null hypothesis is that $p=0$ (i.e. no success is possible). In a dataset, there is only one success out of 1 000 000 observations. Will you reject the null hypothesis? 
 ```
-
+NO
 ```
 Explain your answer below:
-
+The alternative hypothesis is that there might be more than 0 successes.
+The possibility of one or more successes is very small and p-value here lies on the left of the 0.05 alpha threshold.
 
 ## Part 3
 
@@ -119,18 +133,19 @@ $44$, $50$, $42$, $64$, $66$, $42$, $72$, $56$, $72$, $54$, $46$, $48$, $48$, $5
 ### 5.1
 Arrange them in a vector and call it `age`. 
 ```{r}
-
+age <- c(44, 50, 42, 64, 66, 42, 72, 56, 72, 54, 46, 48, 48, 52, 50, 66, 84)
 ```
 
 ### 5.2
 Examine the type of `age` variable (numeric, character, etc).
-```
-
+```{r}
+class(age)
 ```
 
 ### 5.3
 Plot the histogram of the vector `age` with $5$ bins. Change its color to any you want. (Use either R basic or ggplot2 style for plotting.)
 ```{r}
+hist(age, col="lightpink", breaks = 5)
 
 ```
 
@@ -143,13 +158,15 @@ Here is a series of words:
 ### 6.1
 Arrange elements above in a vector and call it `words` 
 ```{r}
+words = c("pie", "bar", "bar", "pie", "pie", "bar", "bar", "chart")
 
 ```
 
 ### 6.2
 Calculate the relative frequences of values in `words` measured in percent.
 ```{r}
-
+#Freq(words)
+(table(words)/sum(table(words)))*100
 ```
 
 ## Problem 7. Position of verbs in verses
@@ -172,28 +189,47 @@ Let's assume that the probability for verbs to be used in any position ('in gene
 
 What is your null hypothesis $H_0$ and what is the alternative hypothesis $H_1$?
 ```
-H0: 
-H1: 
+H0: In verses written in 1920s, verbs in the rhyming posision are used in the same way verbs are used in general (with probability of 0,17).
+H1: In verses written in 1920s, verbs in the rhyming posision are used differently (more often or less often) than expected for verbs in general (the probability is not 0,17).
 ```
 
 ### 7.2
 
 Read the dataset [“The last words in verses”](https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/poetry_last_in_lines.csv). Filter out the relevant observations from 1920s, calculate the number of verbs observed in the sample, and the sample size. 
 ```{r}
+df <- read.csv("https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/poetry_last_in_lines.csv", sep = "\t")
 
+```
+
+Observations from 1920s:
+```{r}
+twentieth_century <- df[df$Decade=='1920s',]
+```
+
+Calculate the number of verbs observed in the sample
+```{r}
+nverbs = nrow(twentieth_century[twentieth_century$UPoS=='VERB',])
+nverbs
+```
+
+The sample size:
+```{r}
+sample_size = nrow(twentieth_century)
+sample_size
 ```
 
 ### 7.3
 
 Use an exact binomial test to calculate p-value. 
 ```{r}
-
+binom.test(nverbs, sample_size, p=0.17)
 ```
 
 ### 7.4 Interpret results
 
-Give your interpretation of obtained p-value. Answer the initial question: Can we decide that in verses written in 1920s, verbs are used in the rhyming posision more often or less often than expected?
+Give your interpretation of obtained p-value. Answer the initial question: Can we decide that in verses written in 1920s, verbs are used in the rhyming position more often or less often than expected?
 ```
+No, we can't, because the obtained p-value is not small enough. It is much bigger than alpha (0.05). Thus, we can't reject the null hypothesis
 
 ```
 
@@ -201,12 +237,26 @@ Give your interpretation of obtained p-value. Answer the initial question: Can w
 *(A bonus problem, extra points in evaluation)*.
 Repeat 2.3 for verses written in the 1820s.
 ```{r}
+nineteenth_century <- df[df$Decade=='1820s',]
+```
 
+```{r}
+nverbs = nrow(nineteenth_century[nineteenth_century$UPoS=='VERB',])
+nverbs
+```
+
+```{r}
+sample_size = nrow(nineteenth_century)
+sample_size
+```
+
+```{r}
+binom.test(nverbs, sample_size, p=0.17)
 ```
 
 Write down your general conlusions about data provided for both 1920s and 1820s data.
 ```
-
+Both data samples show that there's not much difference in the use of verbs comparing to general probability of a verb occuring at the end of the line. Anyway, the null hypothesis can't be rejected and we can't say that verbs are used differently in the rhyming position during these periods of time.
 ```
 
 ### Problem 8. One-sample t-test
@@ -219,19 +269,24 @@ t.test(sample, mu = 7725) # mu is a population mean
 ### 8.1
 Write down a two-tailed alternative hypothesis.
 ```
-H1: 
+H1: the population mean of vowel duration in speaker `shg05` do not equals 73 (ms).
 ```
 
 ### 8.2
 Perform a one-sample t-test. 
 ```{r}
+df <- read.csv("https://raw.githubusercontent.com/LingData2019/LingData2020/master/data/icelandic.csv")
+```
 
+```{r}
+speaker2test <- df[df$speaker=='shg05',]
+t.test(speaker2test$vowel.dur, mu = 73)
 ```
 
 ### 8.3
 Interpret results. 
 ```
-
+We cannot reject the null hypothesis, because the obtained p-value (0.05172) is bigger than alpha (0.05). This means that we should stick to the 73 ms value while estimating the vowel duration of this particular speaker.
 ```
 
 #### Supplementary reading
